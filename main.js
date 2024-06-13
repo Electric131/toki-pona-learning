@@ -119,7 +119,7 @@ function main() {
         practice();
     } else if (args.words) {
         printWords();
-    } else if (args.statistics) {
+    } else if (args.stats) {
         statistics();
     } else {
         console.clear();
@@ -302,12 +302,15 @@ function question(prompt) {
             process.stdout.write("\r\x1b[K"); // Clear previous line
             process.stdout.write(prompt + answer);
             let key = await keyPressed();
-            if (/^[a-z\?]$/g.exec(key.name)) {
+            if (/^[a-z]$/g.exec(key.name)) {
                 answer += key.name;
             } else if (key.name == "backspace" && answer.length > 0) {
                 answer = answer.slice(0, -1);
-            } else if (key.name == "return") {
+            } else if (key.name == "return" || key.sequence == "?") {
                 process.stdout.write("\n");
+                if (key.sequence == "?") {
+                    answer += "?";
+                }
                 res(answer);
                 break;
             }
