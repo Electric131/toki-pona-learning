@@ -42,6 +42,8 @@ const args = commandLineArgs(options);
 // Merge `kitz` arg with practice, since it's just another alias
 args.practice = args.practice || args.kitz;
 delete args.kitz;
+args["word-rate"] = args["word-rate"] || 5; // Enforce default
+args["min-accuracy"] = args["min-accuracy"] || 80; // Enforce default
 
 var progress = {};
 var config = {};
