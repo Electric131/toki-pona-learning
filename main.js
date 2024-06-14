@@ -164,11 +164,17 @@ function practice() {
 function printWords() {
     console.clear();
     console.log(`Learned Words (${Object.keys(progress.words).length}):`);
-    let sorted = Object.keys(progress.words).sort((a, b) => ((progress.words[b].correct / progress.words[b].attempts) || 1) - ((progress.words[a].correct / progress.words[a].attempts) || 1));
+    let sorted = Object.keys(progress.words).sort((a, b) => {
+        a = progress.words[a];
+        b = progress.words[b];
+        let aAccuracy = (a.correct / a.attempts) || 0;
+        let bAccuracy = (b.correct / b.attempts) || 0;
+        return bAccuracy - aAccuracy;
+    });
     for (let word of sorted) {
         let wordData = progress.words[word];
-        let percent = Math.round(((wordData.correct / wordData.attempts) || 1) * 10000) / 100;
-        console.log(`${word} (${percent}%)`);
+        let percent = Math.round(((wordData.correct / wordData.attempts) || 0) * 10000) / 100;
+        console.log(`${word} (${percent}%) - ${wordData.attempts} attempts`);
     }
 }
 async function statistics() {
