@@ -301,7 +301,7 @@ async function select(choices, customDraw) {
         }
     }
 }
-function question(prompt) {
+function question(prompt, correctAnswer) {
     return new Promise(async (res, rej) => {
         let answer = "";
         while (true) {
@@ -310,6 +310,13 @@ function question(prompt) {
             let key = await keyPressed();
             if (/^[a-z]$/g.exec(key.name)) {
                 answer += key.name;
+                if (answer == correctAnswer) {
+                    process.stdout.write("\r\x1b[K"); // Clear previous line
+                    process.stdout.write(prompt + answer);
+                    process.stdout.write("\n");
+                    res(answer);
+                    break;
+                }
             } else if (key.name == "backspace" && answer.length > 0) {
                 answer = answer.slice(0, -1);
             } else if (key.name == "return" || key.sequence == "?") {
@@ -378,7 +385,7 @@ async function loop() {
                     console.log(`Word: ${word.word}`);
                     break;
                 }
-                let guess = await question(`Word: ${hint}`);
+                let guess = await question(`Word: ${hint}`, word.word.slice(hint.length));
                 if (hint + guess == word.word) {
                     progress.words[word.word].correct++;
                     break;
